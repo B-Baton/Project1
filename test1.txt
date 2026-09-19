@@ -1,1 +1,74 @@
 Шип Петр
+
+
+using System;
+using System.Reflection.Emit;
+using System.Windows.Forms;
+
+namespace Lab1_Example1
+{
+    public partial class Form1 : Form
+    {
+        private Label questionLabel;
+        private Button yesButton;
+        private Button noButton;
+        private Random rnd = new Random();
+
+        public Form1()
+        {
+            InitializeComponent();
+            SetupUI();
+        }
+
+        private void SetupUI()
+        {
+            this.Text = "Пример 1 – Убегающая кнопка";
+            this.Size = new System.Drawing.Size(400, 300);
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            // Метка с вопросом
+            questionLabel = new Label();
+            questionLabel.Text = "купить турмс?";
+            questionLabel.Font = new System.Drawing.Font("Segoe UI", 12, System.Drawing.FontStyle.Bold);
+            questionLabel.AutoSize = true;
+            questionLabel.Location = new System.Drawing.Point(50, 30);
+            this.Controls.Add(questionLabel);
+
+            // Кнопка "Да" – статичная
+            yesButton = new Button();
+            yesButton.Text = "Да";
+            yesButton.Size = new System.Drawing.Size(80, 35);
+            yesButton.Location = new System.Drawing.Point(100, 100);
+            yesButton.Click += YesButton_Click;
+            this.Controls.Add(yesButton);
+
+            // Кнопка "Нет" – убегающая
+            noButton = new Button();
+            noButton.Text = "Нет";
+            noButton.Size = new System.Drawing.Size(80, 35);
+            noButton.Location = new System.Drawing.Point(210, 100);
+            noButton.MouseEnter += NoButton_MouseEnter;
+            // чтобы кнопка не реагировала на клик
+            this.Controls.Add(noButton);
+        }
+
+        private void YesButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("РПУ отключен на три дня, запас пива на неделю в коплекте", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void NoButton_MouseEnter(object sender, EventArgs e)
+        {
+            // Перемещаем кнопку в случайное место в пределах клиентской области формы
+            int maxLeft = this.ClientSize.Width - noButton.Width;
+            int maxTop = this.ClientSize.Height - noButton.Height;
+
+            // Защита от отрицательных значений (если форма меньше кнопки)
+            if (maxLeft < 0) maxLeft = 0;
+            if (maxTop < 0) maxTop = 0;
+
+            noButton.Left = rnd.Next(0, maxLeft + 1);
+            noButton.Top = rnd.Next(0, maxTop + 1);
+        }
+    }
+}
